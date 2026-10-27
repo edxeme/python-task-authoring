@@ -1,0 +1,37 @@
+diff --git a/examples/03-feature-cli-search/src/cli.py b/examples/03-feature-cli-search/src/cli.py
+index b1975cd..c91ce0c 100644
+--- a/examples/03-feature-cli-search/src/cli.py
++++ b/examples/03-feature-cli-search/src/cli.py
+@@ -22,6 +22,12 @@ def list_notes(notes: list[str]) -> list[str]:
+     return list(notes)
+ 
+ 
++def search_notes(notes: list[str], term: str) -> list[str]:
++    """Return the notes containing *term*, case-insensitively, in order."""
++    needle = term.casefold()
++    return [note for note in notes if needle in note.casefold()]
++
++
+ def build_parser() -> argparse.ArgumentParser:
+     parser = argparse.ArgumentParser(prog="notes")
+     sub = parser.add_subparsers(dest="command", required=True)
+@@ -30,6 +36,9 @@ def build_parser() -> argparse.ArgumentParser:
+     p_add.add_argument("text")
+ 
+     sub.add_parser("list", help="print all notes")
++
++    p_search = sub.add_parser("search", help="filter notes by substring")
++    p_search.add_argument("term")
+     return parser
+ 
+ 
+@@ -43,6 +52,9 @@ def main(argv: list[str] | None = None) -> int:
+     elif args.command == "list":
+         for note in list_notes(notes):
+             print(note)
++    elif args.command == "search":
++        for note in search_notes(notes, args.term):
++            print(note)
+     return 0
+ 
+ 

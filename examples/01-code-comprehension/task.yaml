@@ -1,0 +1,11 @@
+id: comprehension-retry-backoff
+title: Explain the runtime behavior of a retry-with-backoff decorator
+type: comprehension
+difficulty: medium
+skills:
+  - python
+  - decorators
+  - runtime-behavior
+  - testing
+verifier: python -m pytest tests/ -v
+solution: solution/ANSWER.md

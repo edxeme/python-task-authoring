@@ -1,0 +1,11 @@
+id: refactor-pricing-guard-clauses
+title: Refactor price_order to guard clauses + table-driven discounts, behavior unchanged
+type: refactor
+difficulty: medium
+skills:
+  - python
+  - refactoring
+  - legacy-code
+  - testing
+verifier: python -m pytest tests/ -v
+solution: solution/solution.patch

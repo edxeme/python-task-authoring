@@ -1,0 +1,10 @@
+id: feature-cli-search-subcommand
+title: Add a case-insensitive `search` subcommand to the notes CLI
+type: feature
+difficulty: easy
+skills:
+  - python
+  - argparse
+  - pytest
+verifier: python -m pytest tests/ -v
+solution: solution/solution.patch

@@ -1,0 +1,13 @@
+diff --git a/examples/02-bugfix-pagination/src/pagination.py b/examples/02-bugfix-pagination/src/pagination.py
+index b2bd85e..2ea658c 100644
+--- a/examples/02-bugfix-pagination/src/pagination.py
++++ b/examples/02-bugfix-pagination/src/pagination.py
+@@ -27,4 +27,7 @@ def total_pages(n_items: int, per_page: int) -> int:
+     """Number of pages needed to show *n_items* with *per_page* per page."""
+     if per_page <= 0:
+         raise ValueError("per_page must be positive")
+-    return n_items // per_page  # BUG: truncates the final partial page
++    # Ceiling division keeps the final partial page. Exact for arbitrarily
++    # large ints, unlike math.ceil(n_items / per_page), which rounds through
++    # a float and loses precision past 2**53.
++    return -(-n_items // per_page)

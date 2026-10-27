@@ -1,0 +1,10 @@
+id: bugfix-pagination-off-by-one
+title: Fix the off-by-one in total_pages so the final partial page is counted
+type: bugfix
+difficulty: easy
+skills:
+  - python
+  - debugging
+  - pytest
+verifier: python -m pytest tests/ -v
+solution: solution/solution.patch

@@ -1,0 +1,62 @@
+diff --git a/examples/04-refactor-pricing/src/pricing.py b/examples/04-refactor-pricing/src/pricing.py
+index 59ca66a..073409a 100644
+--- a/examples/04-refactor-pricing/src/pricing.py
++++ b/examples/04-refactor-pricing/src/pricing.py
+@@ -7,37 +7,31 @@ observed result.
+ 
+ from __future__ import annotations
+ 
++_TIER_DISCOUNTS = {"gold": 0.15, "silver": 0.10, "standard": 0.0}
++_BULK_THRESHOLD = 1000.0
++_BULK_FLOOR = 0.05
++
+ 
+ def price_order(order: dict) -> float:
+     """Compute the final price in USD for an order dict."""
+-    total = 0.0
+     items = order.get("items", [])
+-    if items:
+-        for item in items:
+-            qty = item.get("qty", 1)
+-            price = item.get("unit_price", 0.0)
+-            if qty > 0:
+-                total += qty * price
+-            else:
+-                raise ValueError(f"invalid quantity {qty!r}")
+-    else:
++    if not items:
+         raise ValueError("order has no items")
+ 
+-    subtotal = total
+-    customer = order.get("customer") or {}
+-    tier = customer.get("tier", "standard")
+-    if tier == "gold":
+-        discount = 0.15
+-    else:
+-        if tier == "silver":
+-            discount = 0.10
+-        else:
+-            if tier == "standard":
+-                discount = 0.0
+-            else:
+-                raise ValueError(f"unknown tier {tier!r}")
+-
+-    if subtotal > 1000.0:
+-        discount = max(discount, 0.05)
++    subtotal = 0.0
++    for item in items:
++        qty = item.get("qty", 1)
++        unit_price = item.get("unit_price", 0.0)
++        if qty <= 0:
++            raise ValueError(f"invalid quantity {qty!r}")
++        subtotal += qty * unit_price
++
++    tier = (order.get("customer") or {}).get("tier", "standard")
++    if tier not in _TIER_DISCOUNTS:
++        raise ValueError(f"unknown tier {tier!r}")
++    discount = _TIER_DISCOUNTS[tier]
++
++    if subtotal > _BULK_THRESHOLD:
++        discount = max(discount, _BULK_FLOOR)
+ 
+     return round(subtotal * (1 - discount), 2)
